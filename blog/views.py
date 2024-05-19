@@ -8,6 +8,7 @@ from django.views.generic import (
     DeleteView
 )
 from .models import post
+from django.views.generic import ListView
 from django.urls import reverse_lazy
 
 
@@ -23,6 +24,7 @@ class PostListView(ListView):
     template_name = 'blog/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
     ordering = ['-date_post']
+    paginate_by = 2
 
 
 class PostDetailView(DetailView):
