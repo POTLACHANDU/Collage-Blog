@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -8,8 +8,8 @@ from django.views.generic import (
     DeleteView
 )
 from .models import post
-from django.views.generic import ListView
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -24,8 +24,31 @@ class PostListView(ListView):
     template_name = 'blog/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
     ordering = ['-date_post']
-    paginate_by = 2
+    paginate_by = 5
 
+class UserPostListView(LoginRequiredMixin, ListView):
+    model = post
+    template_name = 'blog/user_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return post.objects.filter(author=user).order_by('-date_post')
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = get_object_or_404(User, username=self.kwargs.get('username'))
+        return context
+
+class MyPostListView(LoginRequiredMixin, ListView):
+    model = post
+    template_name = 'blog/my_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return post.objects.filter(author=self.request.user).order_by('-date_post')
 
 class PostDetailView(DetailView):
     model = post
