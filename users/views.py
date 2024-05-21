@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateUserForm, UpdateProfileForm
+from .forms import UpdateUserForm, UpdateProfileForm, CustomPasswordResetForm
 from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 
 
@@ -83,3 +83,8 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'user/change_password.html'
     success_message = "Successfully Changed Your Password"
     success_url = reverse_lazy('blog-home')   
+
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'users/password_reset.html'
+    success_url = reverse_lazy('password_reset_done')

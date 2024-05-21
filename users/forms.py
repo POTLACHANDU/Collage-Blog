@@ -1,5 +1,5 @@
 from django import forms
-
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from .models import Profile
 
@@ -23,3 +23,17 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image', 'bio']
+
+class CustomPasswordResetForm(PasswordResetForm):
+    username = forms.CharField(max_length=254, required=True)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+
+        if not User.objects.filter(username=username, email=email).exists():
+            raise forms.ValidationError(
+                "There is no user registered with the specified username and email address."
+            )
+        return cleaned_data        

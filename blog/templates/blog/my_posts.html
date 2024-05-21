@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
   <h3>{{ user.username }}'s Posts</h3>
-  {% if object.author == user %}
+  
     {% for post in posts %}
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
@@ -14,7 +14,7 @@
             </div>
         </article>
     {% endfor %}
-  {% endif %}
+ 
   
   <div class="pagination">
     <span class="step-links">
