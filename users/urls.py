@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from users.views import ChangePasswordView
 from django.contrib.auth import views as auth_views
-from django.urls import path
 from .views import CustomPasswordResetView
 
 urlpatterns = [
